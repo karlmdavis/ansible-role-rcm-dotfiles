@@ -1,0 +1,6 @@
+# Ignore the Python virtual environment.
+venv/
+
+# Ignore Ansible's `.retry` files.
+*.retry
+

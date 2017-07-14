@@ -12,25 +12,3 @@
     update_cache: true
   become: true
 
-- name: Clone Git Repos
-  git:
-    repo: "{{ item.repo }}"
-    dest: "{{ item.dest }}"
-  with_items: "{{ rcm_repos }}"
-
-- name: Set Git Repos Ownership
-  file:
-    state: directory
-    recurse: true
-    dest: "{{ item.dest }}"
-    owner: "{{ rcm_user }}"
-    group: "{{ rcm_user }}"
-  with_items: "{{ rcm_repos }}"
-  become: true
-
-- set_fact: rcup_args="-x README.md -x LICENSE {{ ' '.join(map('-d {0.dest}'.format, rcm_repos)) }}"
-- name: Run rcup to Deploy Dotfiles
-  command: "/usr/bin/rcup {{ rcup_args }}"
-  become: true
-  become_user: "{{ rcm_user }}"
-

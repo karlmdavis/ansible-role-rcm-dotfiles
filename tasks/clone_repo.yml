@@ -1,0 +1,37 @@
+---
+
+# This task file should be used as an include with the `rcm_repo` variable set
+# to the `rcm_repos` entry that a Git repo should be cloned for.
+
+- name: Check to See if Git Repo Exists
+  stat:
+    path: "{{ rcm_repo.dest }}"
+  register: stat_repo
+  become: true
+
+- block:
+    - name: Create Local Temp Directory for Repo
+      tempfile:
+        state: directory
+        prefix: git-repo-
+        suffix: .git
+      register: tempfile_repo
+      delegate_to: localhost
+    
+    # We have to clone the repo locally, because otherwise we run into trouble
+    # with remote SSH keys.
+    - name: Clone Git Repo Locally
+      git:
+        repo: "{{ rcm_repo.repo }}"
+        dest: "{{ tempfile_repo.path }}"
+      delegate_to: localhost
+
+    - name: Push Repo to Remote Host
+      copy:
+        src: "{{ tempfile_repo.path }}"
+        dest: "{{ rcm_repo.dest }}"
+        owner: "{{ rcm_user }}"
+        group: "{{ rcm_user }}"
+      become: true
+  when: stat_repo.exists is defined and stat_repo.exists == false
+

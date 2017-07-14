@@ -4,3 +4,14 @@
 - set_fact: rcm_tasks="{{ 'main_no_internet.yml' if rcm_install_mode == 'no_internet' else 'main_{0}.yml'.format(ansible_distribution) }}"
 - include: "{{ rcm_tasks }}"
 
+- include: clone_repo.yml
+  with_items: "{{ rcm_repos }}"
+  loop_control:
+    loop_var: rcm_repo
+
+- set_fact: rcup_args="-x README.md -x LICENSE {{ ' '.join(map('-d {0.dest}'.format, rcm_repos)) }}"
+- name: Run rcup to Deploy Dotfiles
+  command: "/usr/bin/rcup {{ rcup_args }}"
+  become: true
+  become_user: "{{ rcm_user }}"
+

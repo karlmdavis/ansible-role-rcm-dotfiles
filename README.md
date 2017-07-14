@@ -22,7 +22,7 @@ Here are the variables that must be defined by users:
         refspec: '+refs/pull/*:refs/heads/*'
         dest: '/home/user42/superawesome'
 
-In addition, if the `rcm_role` variable is set to `no_internet`, the role will perform all downloads on the Ansible management system, rather than assuming that the system being managed has an internet connection. In this mode, RCM will be installed per-user, rather than system-wide.
+In addition, if the `rcm_install_mode` variable is set to `no_internet`, the role will perform all downloads on the Ansible management system, rather than assuming that the system being managed has an internet connection. In this mode, RCM will be installed per-user, rather than system-wide.
 
 See [defaults/main.yml](./defaults/main.yml) for the list of defaulted variables and their default values.
 

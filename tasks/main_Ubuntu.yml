@@ -12,3 +12,17 @@
     update_cache: true
   become: true
 
+- name: Clone Git Repos
+  git:
+    repo: "{{ item.repo }}"
+    dest: "{{ item.dest }}"
+  with_items: "{{ rcm_repos }}"
+  become: true
+  become_user: "{{ rcm_user }}"
+
+- set_fact: rcup_args="{{ ' '.join(map('-d {0.dest}'.format, rcm_repos)) }}"
+- name: Run rcup to Deploy Dotfiles
+  command: "/usr/bin/rcup {{ rcup_args }}"
+  become: true
+  become_user: "{{ rcm_user }}"
+

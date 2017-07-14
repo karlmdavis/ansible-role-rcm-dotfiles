@@ -1,48 +1,60 @@
 ---
-
-- name: Get Local Temporary File for RCM Archive
-  tempfile:
-    state: file
-    prefix: 'rcm-'
-    suffix: '.tar.gz'
-  register: tempfile_rcm_archive_local
-  delegate_to: localhost
-
-- name: Download RCM Archive Locally
-  get_url:
-    url: 'https://thoughtbot.github.io/rcm/dist/rcm-1.3.1.tar.gz'
-    checksum: 'sha256:9c8f92dba63ab9cb8a6b3d0ccf7ed8edf3f0fb388b044584d74778145fae7f8f'
-    dest: "{{ tempfile_rcm_archive_local.path }}"
-  delegate_to: localhost
-
-- name: Get Remote Temporary Directory for RCM Archive
-  tempfile:
-    state: directory
-    prefix: 'rcm-'
-    suffix: '.tar.gz'
-  register: tempfile_rcm_archive_remote
-  become: true
-  become_user: "{{ rcm_user }}"
-
-- name: Extract RCM Archive Remotely
-  unarchive:
-    copy: true
-    src: "{{ tempfile_rcm_archive_local.path }}"
-    dest: "{{ tempfile_rcm_archive_remote.path }}"
-    owner: "{{ rcm_user }}"
-    group: "{{ rcm_user }}"
-    mode: u=rwx,g=rwx,o=rx
-  become: true
-  become_user: "{{ rcm_user }}"
-
+    
 - name: Lookup User Home Directory
   shell: "/usr/bin/getent passwd {{ rcm_user }} | /usr/bin/cut -d: -f6"
   register: shell_user_home
+  changed_when: false
 
-- name: Install RCM for User
-  shell: "./configure --prefix={{ shell_user_home.stdout }} && make && make install"
+- name: Check Existing RCM Install
+  command: mkrc -V
   args:
-    chdir: "{{ tempfile_rcm_archive_remote.path }}/rcm-1.3.1/"
+    chdir: "{{ shell_user_home.stdout }}"
+  register: command_mkrc_version
   become: true
   become_user: "{{ rcm_user }}"
+  changed_when: false
+
+- block:
+    - name: Get Local Temporary File for RCM Archive
+      tempfile:
+        state: file
+        prefix: 'rcm-'
+        suffix: '.tar.gz'
+      register: tempfile_rcm_archive_local
+      delegate_to: localhost
+    
+    - name: Download RCM Archive Locally
+      get_url:
+        url: 'https://thoughtbot.github.io/rcm/dist/rcm-1.3.1.tar.gz'
+        checksum: 'sha256:9c8f92dba63ab9cb8a6b3d0ccf7ed8edf3f0fb388b044584d74778145fae7f8f'
+        dest: "{{ tempfile_rcm_archive_local.path }}"
+      delegate_to: localhost
+    
+    - name: Get Remote Temporary Directory for RCM Archive
+      tempfile:
+        state: directory
+        prefix: 'rcm-'
+        suffix: '.tar.gz'
+      register: tempfile_rcm_archive_remote
+      become: true
+      become_user: "{{ rcm_user }}"
+    
+    - name: Extract RCM Archive Remotely
+      unarchive:
+        copy: true
+        src: "{{ tempfile_rcm_archive_local.path }}"
+        dest: "{{ tempfile_rcm_archive_remote.path }}"
+        owner: "{{ rcm_user }}"
+        group: "{{ rcm_user }}"
+        mode: u=rwx,g=rwx,o=rx
+      become: true
+      become_user: "{{ rcm_user }}"
+    
+    - name: Install RCM for User
+      shell: "./configure --prefix={{ shell_user_home.stdout }} && make && make install"
+      args:
+        chdir: "{{ tempfile_rcm_archive_remote.path }}/rcm-1.3.1/"
+      become: true
+      become_user: "{{ rcm_user }}"
+  when: command_mkrc_version.rc != 0 or (command_mkrc_version.rc == 0 and command_mkrc_version.stdout_lines[0].split()[2] != '1.3.1')
 

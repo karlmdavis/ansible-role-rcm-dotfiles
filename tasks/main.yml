@@ -1,8 +1,8 @@
 ---
 
 # Determine which installation and configuration mechanism to use.
-- set_fact: rcm_tasks="{{ 'main_no_internet.yml' if rcm_install_mode == 'no_internet' else 'main_{0}.yml'.format(ansible_distribution) }}"
-- include: "{{ rcm_tasks }}"
+- set_fact: rcm_install_tasks="{{ 'install_no_internet.yml' if rcm_install_mode == 'no_internet' else 'install_{0}.yml'.format(ansible_distribution) }}"
+- include: "{{ rcm_install_tasks }}"
 
 - include: clone_repo.yml
   with_items: "{{ rcm_repos }}"

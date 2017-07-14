@@ -28,7 +28,7 @@
 
     - name: Push Repo to Remote Host
       copy:
-        src: "{{ tempfile_repo.path }}"
+        src: "{{ tempfile_repo.path }}/"
         dest: "{{ rcm_repo.dest }}"
         owner: "{{ rcm_user }}"
         group: "{{ rcm_user }}"

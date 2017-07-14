@@ -6,9 +6,7 @@
   changed_when: false
 
 - name: Check Existing RCM Install
-  command: mkrc -V
-  args:
-    chdir: "{{ shell_user_home.stdout }}"
+  command: "{{ shell_user_home.stdout }}/bin/mkrc -V"
   register: command_mkrc_version
   become: true
   become_user: "{{ rcm_user }}"

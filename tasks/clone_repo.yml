@@ -30,6 +30,12 @@
       synchronize:
         src: "{{ tempfile_repo.path }}/"
         dest: "{{ rcm_repo.dest }}"
+      become: true
+
+    - name: Set Repo Ownership
+      file:
+        state: directory
+        path: "{{ rcm_repo.dest }}"
         owner: "{{ rcm_user }}"
         group: "{{ rcm_user }}"
       become: true

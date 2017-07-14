@@ -27,7 +27,7 @@
       delegate_to: localhost
 
     - name: Push Repo to Remote Host
-      copy:
+      synchronize:
         src: "{{ tempfile_repo.path }}/"
         dest: "{{ rcm_repo.dest }}"
         owner: "{{ rcm_user }}"

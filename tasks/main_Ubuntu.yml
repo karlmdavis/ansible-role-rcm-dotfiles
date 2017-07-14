@@ -16,7 +16,6 @@
   git:
     repo: "{{ item.repo }}"
     dest: "{{ item.dest }}"
-    accept_hostkey: true
   with_items: "{{ rcm_repos }}"
   become: true
   become_user: "{{ rcm_user }}"

@@ -33,5 +33,5 @@
         owner: "{{ rcm_user }}"
         group: "{{ rcm_user }}"
       become: true
-  when: stat_repo.exists is defined and stat_repo.exists == false
+  when: stat_repo.exists is not defined or stat_repo.exists == false
 

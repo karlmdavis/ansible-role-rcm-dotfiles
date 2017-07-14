@@ -17,8 +17,16 @@
     repo: "{{ item.repo }}"
     dest: "{{ item.dest }}"
   with_items: "{{ rcm_repos }}"
+
+- name: Set Git Repos Ownership
+  file:
+    state: directory
+    recurse: true
+    dest: "{{ item.dest }}"
+    owner: "{{ rcm_user }}"
+    group: "{{ rcm_user }}"
+  with_items: "{{ rcm_repos }}"
   become: true
-  become_user: "{{ rcm_user }}"
 
 - set_fact: rcup_args="-x README.md -x LICENSE {{ ' '.join(map('-d {0.dest}'.format, rcm_repos)) }}"
 - name: Run rcup to Deploy Dotfiles

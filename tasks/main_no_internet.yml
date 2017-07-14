@@ -36,7 +36,7 @@
   become_user: "{{ rcm_user }}"
 
 - name: Lookup User Home Directory
-  shell: /usr/bin/getent passwd "{{ rcm_user }}" | /usr/bin/cut -d: -f6
+  shell: /usr/bin/getent passwd {{ rcm_user }} | /usr/bin/cut -d: -f6
   register: shell_user_home
 
 - name: Install RCM for User

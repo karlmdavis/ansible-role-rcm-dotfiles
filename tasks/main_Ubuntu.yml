@@ -1,0 +1,14 @@
+---
+
+- name: Add RCM PPA
+  apt_repository:
+    repo: 'ppa:martin-frost/thoughtbot-rcm'
+    update_cache: true
+  become: true
+
+- name: Install RCM
+  apt:
+    name: rcm
+    update_cache: true
+  become: true
+

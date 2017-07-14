@@ -33,6 +33,7 @@
 
 - name: Install RCM for User
   shell: ./configure && make && make install --prefix="{{ ansible_env.HOME }}"
+  args:
     chdir: "{{ tempfile_rcm_archive_remote.path }}"
   become: true
   become_user: "{{ rcm_user }}"

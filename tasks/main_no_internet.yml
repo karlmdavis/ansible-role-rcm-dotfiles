@@ -21,6 +21,8 @@
     prefix: 'rcm-'
     suffix: '.tar.gz'
   register: tempfile_rcm_archive_remote
+  become: true
+  become_user: "{{ rcm_user }}"
 
 - name: Extract RCM Archive Remotely
   unarchive:
@@ -30,6 +32,8 @@
     owner: "{{ rcm_user }}"
     group: "{{ rcm_user }}"
     mode: u=rwx,g=rwx,o=rx
+  become: true
+  become_user: "{{ rcm_user }}"
 
 - name: Install RCM for User
   shell: ./configure && make && make install --prefix="{{ ansible_env.HOME }}"

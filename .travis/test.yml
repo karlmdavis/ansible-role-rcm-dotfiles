@@ -1,6 +1,6 @@
 ---
 - hosts: localhost
-  remote_user: root
+  connection: local
   tasks:
     - name: Create Test User
       user:

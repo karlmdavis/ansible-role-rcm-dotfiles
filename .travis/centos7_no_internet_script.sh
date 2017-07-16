@@ -21,6 +21,7 @@ sudo docker exec "$(cat /tmp/container_id)" ls -la /var/travis_test_source
 sudo docker exec "$(cat /tmp/container_id)" mkdir /var/travis_test_work
 sudo docker exec "$(cat /tmp/container_id)" yum -y install epel-release
 sudo docker exec "$(cat /tmp/container_id)" yum -y install python-virtualenv
+sudo docker exec "$(cat /tmp/container_id)" yum groupinstall -y development
 sudo docker exec "$(cat /tmp/container_id)" virtualenv -p /usr/bin/python2.7 /var/travis_test_work/venv
 sudo docker exec "$(cat /tmp/container_id)" /var/travis_test_work/venv/bin/pip install -r /var/travis_test_source/requirements.txt 
 

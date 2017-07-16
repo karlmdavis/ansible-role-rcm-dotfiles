@@ -26,5 +26,5 @@ sudo docker exec "$(cat /tmp/container_id)" virtualenv -p /usr/bin/python2.7 /va
 sudo docker exec "$(cat /tmp/container_id)" /var/travis_test_work/venv/bin/pip install -r /var/travis_test_source/requirements.txt 
 
 # Run the Ansible role in and against the container.
-sudo docker exec "$(cat /tmp/container_id)" /var/travis_test_work/venv/bin/ansible-playbook /var/travis_test_source/.travis/test.yml --inventory-file=/var/travis_test_source/.travis/inventory
+sudo docker exec "$(cat /tmp/container_id)" ANSIBLE_CONFIG=/var/travis_test_source/.travis/ansible.cfg /var/travis_test_work/venv/bin/ansible-playbook /var/travis_test_source/.travis/test.yml --inventory-file=/var/travis_test_source/.travis/inventory
 

@@ -10,6 +10,7 @@
   register: command_mkrc_version
   become: true
   become_user: "{{ rcm_user }}"
+  failed_when: false
   changed_when: false
 
 - block:

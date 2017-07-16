@@ -7,7 +7,7 @@ set -e
 set -v
 
 # Start the CentOS 7 container, running systemd.
-sudo docker run --detach --privileged --volume="${PWD}":/var/travis_test_source:ro --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro centos:7 /usr/lib/systemd/systemd > /tmp/container_id
+sudo docker run --detach --privileged --volume="${PWD}":/var/travis_test_source:rw --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro centos:7 /usr/lib/systemd/systemd > /tmp/container_id
 
 sudo docker exec "$(cat /tmp/container_id)" ls -la /var/travis_test_source
 

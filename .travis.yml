@@ -12,6 +12,7 @@ env:
   #- TEST_CASE=ubuntu_16.04
 
 install:
+  - pwd && ls -la
   - ./.travis/${TEST_CASE}_install.sh
 
   # Install ansible

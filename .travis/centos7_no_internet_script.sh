@@ -9,6 +9,8 @@ set -v
 # Start the CentOS 7 container, running systemd.
 sudo docker run --detach --privileged --volume="${PWD}":/var/travis_test_source:ro --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro centos:7 /usr/lib/systemd/systemd > /tmp/container_id
 
+sudo docker exec "$(cat /tmp/container_id)" ls -la /var/travis_test_source
+
 # In order to test our Ansible role against this container, we need to either: 
 # 1) install Ansible on the host, configure SSH on the container and then 
 # run the role from the host against the container, or 2) install Ansible on

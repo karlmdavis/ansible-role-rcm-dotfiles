@@ -8,7 +8,7 @@
 
     - name: Install and Configure RCM
       include_role:
-        name: rcm
+        name: karlmdavis.rcm
       vars:
         rcm_user: ansible_test
         rcm_install_mode: no_internet

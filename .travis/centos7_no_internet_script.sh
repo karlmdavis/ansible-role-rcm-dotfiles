@@ -7,7 +7,7 @@ set -e
 set -v
 
 # Start the CentOS 7 container, running systemd.
-sudo docker run --detach --privileged --volume="${PWD}":/var/travis_test_source:ro --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro centos:7 /usr/lib/systemd/systemd > /tmp/container_id
+sudo docker run --detach --privileged --volume="${PWD}":/var/travis_test_source:ro --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro -e "ANSIBLE_CONFIG=/var/travis_test_source/.travis/ansible.cfg" centos:7 /usr/lib/systemd/systemd > /tmp/container_id
 
 sudo docker exec "$(cat /tmp/container_id)" ls -la /var/travis_test_source
 
@@ -26,5 +26,5 @@ sudo docker exec "$(cat /tmp/container_id)" virtualenv -p /usr/bin/python2.7 /va
 sudo docker exec "$(cat /tmp/container_id)" /var/travis_test_work/venv/bin/pip install -r /var/travis_test_source/requirements.txt 
 
 # Run the Ansible role in and against the container.
-sudo docker exec "$(cat /tmp/container_id)" ANSIBLE_CONFIG=/var/travis_test_source/.travis/ansible.cfg /var/travis_test_work/venv/bin/ansible-playbook /var/travis_test_source/.travis/test.yml --inventory-file=/var/travis_test_source/.travis/inventory
+sudo docker exec "$(cat /tmp/container_id)" /var/travis_test_work/venv/bin/ansible-playbook /var/travis_test_source/.travis/test.yml --inventory-file=/var/travis_test_source/.travis/inventory
 

@@ -1,0 +1,36 @@
+---
+language: python
+python: "2.7"
+
+# The tests will be run in Docker containers, to verify compatibility with 
+# various OSes.
+sudo: required
+services:
+  - docker
+env:
+  - TEST_CASE=centos7_no_internet
+  #- TEST_CASE=ubuntu_16.04
+
+install:
+  - ./.travis/${TEST_CASE}_install.sh
+
+  # Install ansible
+  #- pip install ansible
+
+  # Check ansible version
+  #- ansible --version
+
+  # Create ansible.cfg with correct roles_path
+  #- printf '[defaults]\nroles_path=../' >ansible.cfg
+
+script:
+  - ./.travis/${TEST_CASE}_script.sh
+
+  # Basic role syntax check
+  #- ansible-playbook tests/test.yml -i tests/inventory --syntax-check
+
+after_script:
+  - docker stop $(docker ps -a -q)
+
+notifications:
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/

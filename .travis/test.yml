@@ -1,0 +1,18 @@
+---
+- hosts: localhost
+  remote_user: root
+  tasks:
+    - name: Create Test User
+      user:
+        name: ansible_test
+
+    - name: Install and Configure RCM
+      include_role:
+        name: rcm
+      vars:
+        rcm_user: ansible_test
+        rcm_install_mode: no_internet
+        rcm_repos:
+          - repo: 'git@github.com:karlmdavis/dotfiles.git'
+            dest: '/home/karl/.dotfiles-karlmdavis.git'
+

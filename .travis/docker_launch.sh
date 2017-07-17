@@ -6,7 +6,7 @@ set -e
 # Echo all commands before running them.
 set -v
 
-# Build and start the CentOS 7 container, running systemd.
+# Build and start the container, running systemd.
 docker build -t ansible_test_rcm/${TEST_CASE} ./.travis/${TEST_CASE}
 docker run \
 	--cap-add=SYS_ADMIN \

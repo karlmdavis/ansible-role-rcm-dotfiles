@@ -23,10 +23,10 @@ install:
 
 script:
   # Basic role syntax check
-  - ansible-playbook tests/test_${TEST_CASE}.yml -i tests/inventory --syntax-check
+  - ansible-playbook .travis/test_${TEST_CASE}.yml --inventory-file=.travis/inventory --syntax-check
 
   # Run the Ansible test case.
-  - ansible-playbook ./.travis/test_${TEST_CASE}.yml --inventory-file=./.travis/inventory
+  - ansible-playbook .travis/test_${TEST_CASE}.yml --inventory-file=.travis/inventory
 
 after_script:
   - docker stop $(docker ps -a -q)

@@ -84,6 +84,28 @@ Be sure to update the `requirements.txt` file after `pip install`ing a new depen
 
     $ pip freeze > requirements.txt
 
+### Docker
+
+It can often be useful to launch the test Docker containers locally. To do so, one must have Docker installed. The following commands can then be used:
+
+```
+# Launch the Docker container for a particular test case (as used in `.travis.yml`).
+$ TEST_CASE=ubuntu_16_04 sudo -E .travis/docker_launch.sh
+
+# List all of the running containers.
+$ sudo docker ps -a
+
+# Given a container ID, e.g. `abc123`, run Bash in that container.
+$ sudo docker exec -it abc123 /bin/bash
+
+# Alternatively, connect to SSH in that container.
+$ ssh-keygen -f ~/.ssh/known_hosts -R [localhost]:13022
+$ ssh ansible_test@localhost -p 13022
+
+# Stop all running containers. See <https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes> for instructions on how to remove their images, etc. to reclaim disk space.
+$ sudo docker stop $(sudo docker ps -a -q)
+```
+
 ## License
 
 This project is licensed under the [GNU General Public License, Version 3](./LICENSE).

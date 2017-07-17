@@ -9,6 +9,7 @@ ENV container docker
 #
 # * <https://hub.docker.com/_/centos/>: Good start, but badly broken.
 # * <https://github.com/solita/docker-systemd>: For Ubuntu, but works!
+# * <https://github.com/moby/moby/issues/28614>: Also some useful info.
 RUN find /etc/systemd/system \
          /lib/systemd/system \
          -path '*.wants/*' \

@@ -11,6 +11,11 @@ env:
   - TEST_CASE=centos_7
   #- TEST_CASE=ubuntu_16.04
 
+addons:
+  apt:
+    packages:
+      - sshpass
+
 install:
   # Prep the Docker container that will be used.
   - ./.travis/docker_launch.sh

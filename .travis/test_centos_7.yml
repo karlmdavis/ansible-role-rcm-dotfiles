@@ -1,11 +1,6 @@
 ---
 - hosts: localhost
-  connection: local
   tasks:
-    - name: Create Test User
-      user:
-        name: ansible_test
-
     - name: Install and Configure RCM
       include_role:
         name: karlmdavis.rcm

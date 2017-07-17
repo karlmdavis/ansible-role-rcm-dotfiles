@@ -1,2 +1,2 @@
-localhost
+localhost:13022 ansible_user=ansible_test
 

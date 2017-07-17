@@ -33,7 +33,7 @@ RUN echo ansible_test ALL=NOPASSWD:ALL > /etc/sudoers.d/ansible_test
 RUN echo 'ansible_test:secret' | chpasswd
 
 # Ensure that Python 2.7 is installed, for Ansible.
-RUN apt-get update && apt-get install -y python2.7
+RUN apt-get update && apt-get install -y python2.7 python
 
 VOLUME [ "/sys/fs/cgroup" ]
 EXPOSE 22

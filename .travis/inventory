@@ -1,2 +1,2 @@
-localhost:13022 ansible_user=ansible_test ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
+localhost:13022 ansible_user=ansible_test ansible_ssh_pass=secret ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
 

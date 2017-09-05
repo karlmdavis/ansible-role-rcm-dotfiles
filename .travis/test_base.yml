@@ -24,6 +24,6 @@
       register: stat_rcm_files
     - name: Fail for Missing Files
       fail: msg='Missing file.'
-      with_items: "{{ stat_rcm_files }}"
+      with_items: "{{ stat_rcm_files.results }}"
       when: item.stat.exists == false
 

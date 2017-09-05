@@ -19,7 +19,7 @@ addons:
 
 install:
   # Ensure that the Travis test user has an SSH key.
-        - if [[ ! -f ~/.ssh/id_rsa.pub ]]; then ssh-keygen -t rsa -N ''-f /home/travis/.ssh/id_rsa; fi
+  - if [[ ! -f ~/.ssh/id_rsa.pub ]]; then ssh-keygen -t rsa -N '' -f /home/travis/.ssh/id_rsa; fi
 
   # Prep the Docker container that will be used.
   - ./.travis/docker_launch.sh

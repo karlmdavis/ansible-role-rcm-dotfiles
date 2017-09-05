@@ -27,8 +27,7 @@ install:
   # Install ansible.
   - pip install -r requirements.frozen.txt
   - ansible --version
-  - mkdir .travis/roles
-  - ln -s `pwd` .travis/roles/karlmdavis.rcm
+  - mkdir .travis/roles && ln -s `pwd` .travis/roles/karlmdavis.rcm
 
 script:
   # Ensure that Ansible runs from this directory.

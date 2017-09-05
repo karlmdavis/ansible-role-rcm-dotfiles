@@ -96,11 +96,18 @@ $ PLATFORM=ubuntu_16_04 sudo -E .travis/docker_launch.sh
 $ sudo docker ps -a
 
 # Given a container ID, e.g. `abc123`, run Bash in that container.
-$ sudo docker exec -it abc123 /bin/bash
+$ PLATFORM=ubuntu_16_04 sudo docker exec ansible_test_rcm.${PLATFORM} /bin/bash
 
-# Alternatively, connect to SSH in that container.
+# Alternatively, connect to SSH in that container. The password for these containers is "secret".
 $ ssh-keygen -f ~/.ssh/known_hosts -R [localhost]:13022
 $ ssh ansible_test@localhost -p 13022
+
+# The Ansible test scripts used by Travis can be run manually:
+$ source venv/bin/activate
+$ mkdir .travis/roles && ln -s `pwd` .travis/roles/karlmdavis.rcm
+$ cd .travis/
+$ TEST_CASE=default ansible-playbook test_base.yml --inventory-file=inventory
+$ rm roles/karlmdavis.rcm && rmdir roles/
 
 # Stop all running containers. See <https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes> for instructions on how to remove their images, etc. to reclaim disk space.
 $ sudo docker stop $(sudo docker ps -a -q)

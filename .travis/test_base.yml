@@ -1,0 +1,23 @@
+---
+
+- hosts: docker_container
+  tasks:
+    # The only differences between our test cases here are the variables, so we pull them from a separate include.
+    - name: Set Ansible Variables for Test Case
+      include_vars: "{{ lookup('env', 'TEST_CASE') }}.yml"
+    
+    - name: Apply Ansible Role
+      include_role:
+        name: karlmdavis.rcm
+
+    - name: Check for Files Created by Role
+      stat:
+        path: "{{ item }}"
+      with_items:
+        - /home/ansible_test/.dotfiles-karlmdavis.git
+      register: stat_rcm_files
+    - name: Fail for Missing Files
+      fail: msg='Missing file.'
+      with_items: "{{ stat_rcm_files }}"
+      when: item.stat.exists == false
+

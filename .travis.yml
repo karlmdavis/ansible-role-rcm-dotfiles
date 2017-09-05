@@ -8,8 +8,9 @@ sudo: required
 services:
   - docker
 env:
-  - TEST_CASE=centos_7
-  - TEST_CASE=ubuntu_16_04
+  # CentOS is mostly used as a standin for RHEL 7.
+  - PLATFORM=centos_7 TEST_CASE=no_internet
+  - PLATFORM=ubuntu_16_04 TEST_CASE=default
 
 addons:
   apt:
@@ -21,20 +22,34 @@ install:
   - ./.travis/docker_launch.sh
 
   # Install ansible.
-  - pip install -r requirements.txt
+  - pip install -r requirements.frozen.txt
   - ansible --version
   - mkdir .travis/roles
-  - ln -s ./ .travis/roles/karlmdavis.rcm
+  - ln -s `pwd` .travis/roles/karlmdavis.rcm
 
 script:
+  # Ensure that Ansible runs from this directory.
+  - cd .travis/
+
   # Basic role syntax check
-  - ansible-playbook .travis/test_${TEST_CASE}.yml --inventory-file=.travis/inventory --syntax-check
+  - ansible-playbook .travis/test_base.yml --inventory-file=.travis/inventory --syntax-check
 
   # Run the Ansible test case.
-  - ansible-playbook .travis/test_${TEST_CASE}.yml --inventory-file=.travis/inventory
+  - ansible-playbook .travis/test_base.yml --inventory-file=.travis/inventory
 
 after_script:
+  # For debugging: inspect the management environment.
+  - pwd
+  - ls -la ../
+  - ls -la ./
+  - ls -la ./roles/
+
+  # For debugging: inspect the Docker container.
+  - docker exec ansible_test_rcm.${PLATFORM} /usr/bin/ls -la /home/ansible_test/
+
+  # Stop all Docker containers.
   - docker stop $(docker ps -a -q)
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
+

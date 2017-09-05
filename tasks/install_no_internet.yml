@@ -2,7 +2,10 @@
 
 - name: Install Prerequisites
   yum:
-    name: make
+    name: "{{ item }}"
+  with_items:
+    - make
+    - rsync
   become: true
 
 - name: Lookup User Home Directory

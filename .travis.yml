@@ -48,7 +48,7 @@ after_script:
   - ls -la ./roles/
 
   # For debugging: inspect the Docker container.
-  - docker exec ansible_test_rcm.${PLATFORM} /usr/bin/ls -la /home/ansible_test/
+  - docker exec ansible_test_rcm.${PLATFORM} ls -la /home/ansible_test/
 
   # Stop all Docker containers.
   - docker stop $(docker ps -a -q)

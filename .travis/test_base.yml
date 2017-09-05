@@ -2,6 +2,12 @@
 
 - hosts: docker_container
   tasks:
+    - name: Authorize Test SSH Key
+      authorized_key:
+        user: ansible_test
+        state: present
+        key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
+
     # The only differences between our test cases here are the variables, so we pull them from a separate include.
     - name: Set Ansible Variables for Test Case
       include_vars: "{{ lookup('env', 'TEST_CASE') }}.yml"

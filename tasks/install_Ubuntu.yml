@@ -12,3 +12,9 @@
     update_cache: true
   become: true
 
+- name: Install rsync
+  apt:
+    name: rsync
+    update_cache: true
+  become: true
+

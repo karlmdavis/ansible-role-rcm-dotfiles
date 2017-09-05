@@ -1,6 +1,6 @@
 ---
 
-- name: Install Make
+- name: Install Prerequisites
   yum:
     name: make
   become: true

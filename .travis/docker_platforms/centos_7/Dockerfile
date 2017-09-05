@@ -34,6 +34,7 @@ RUN /usr/bin/systemctl enable systemd-user-sessions.service
 RUN useradd ansible_test -G wheel
 RUN echo 'ansible_test:secret' | chpasswd
 RUN echo '%wheel ALL=(ALL) ALL' >> /etc/sudoers
+RUN echo 'ansible_test ALL=NOPASSWD:ALL' >> /etc/sudoers
 
 VOLUME [ "/sys/fs/cgroup" ]
 EXPOSE 22

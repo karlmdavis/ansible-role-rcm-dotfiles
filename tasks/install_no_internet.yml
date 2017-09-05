@@ -1,5 +1,10 @@
 ---
-    
+
+- name: Install Make
+  yum:
+    name: make
+  become: true
+
 - name: Lookup User Home Directory
   shell: "/usr/bin/getent passwd {{ rcm_user }} | /usr/bin/cut -d: -f6"
   register: shell_user_home

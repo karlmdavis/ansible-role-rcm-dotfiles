@@ -32,10 +32,10 @@ script:
   - cd .travis/
 
   # Basic role syntax check
-  - ansible-playbook .travis/test_base.yml --inventory-file=.travis/inventory --syntax-check
+  - ansible-playbook test_base.yml --inventory-file=inventory --syntax-check
 
   # Run the Ansible test case.
-  - ansible-playbook .travis/test_base.yml --inventory-file=.travis/inventory
+  - ansible-playbook test_base.yml --inventory-file=inventory
 
 after_script:
   # For debugging: inspect the management environment.

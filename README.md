@@ -90,7 +90,7 @@ It can often be useful to launch the test Docker containers locally. To do so, o
 
 ```
 # Launch the Docker container for a particular test case (as used in `.travis.yml`).
-$ TEST_CASE=ubuntu_16_04 sudo -E .travis/docker_launch.sh
+$ PLATFORM=ubuntu_16_04 sudo -E .travis/docker_launch.sh
 
 # List all of the running containers.
 $ sudo docker ps -a

@@ -1,4 +1,8 @@
 ---
 
+# Set to 'default' to install via package manager, or 'no_internet' to download and install only for the `rcm_user`.
 rcm_install_mode: default
+
+# Set to `true` to run `rcup` with the `-f` flag, causing it to overwrite any existing dotfiles.
+rcm_replace_existing_files: false
 

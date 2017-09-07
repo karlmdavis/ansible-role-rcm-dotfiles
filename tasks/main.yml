@@ -10,7 +10,7 @@
     loop_var: rcm_repo
 
 - set_fact: rcup_bin="{{ '/home/{0}/bin/rcup'.format(rcm_user) if rcm_install_mode == 'no_internet' else '/usr/bin/rcup' }}"
-- set_fact: rcup_args="-x README.md -x LICENSE {{ rcm_repos | map(attribute='dest') | map('regex_replace', '(.*)', '-d \\1') | join(' ') }}"
+- set_fact: rcup_args="-x README.md -x LICENSE {{ '-f' if rcm_replace_existing_files == true else '' }}{{ rcm_repos | map(attribute='dest') | map('regex_replace', '(.*)', '-d \\1') | join(' ') }}"
 - name: Run rcup to Deploy Dotfiles
   command: "{{ rcup_bin }} {{ rcup_args }}"
   become: true

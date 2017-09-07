@@ -45,5 +45,5 @@
         state: absent
         path: "{{ tempfile_repo.path }}"
       delegate_to: localhost
-  when: stat_repo.exists is not defined or stat_repo.exists == false
+  when: stat_repo.stat.exists is not defined or stat_repo.stat.exists == false
 

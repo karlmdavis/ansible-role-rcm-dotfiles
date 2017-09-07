@@ -15,19 +15,15 @@ The system(s) being managed require the following:
 
 ## Role Variables
 
-Here are the variables that must be defined by users:
+Here are the variables that can be defined by users:
 
-```
-rcm_user: user42
-rcm_repos:
-  - repo: 'git@github.com:foosball/repo.git'
-    dest: '/home/user42/.dotfiles-repo.git'
-  - repo: 'https://foosball.example.com/path/to/repo2.git'
-    refspec: '+refs/pull/*:refs/heads/*'
-    dest: '/home/user42/.dotfiles-repo2.git'
-```
-
-In addition, if the `rcm_install_mode` variable is set to `no_internet`, the role will perform all downloads on the Ansible management system, rather than assuming that the system being managed has an internet connection. In this mode, RCM will be installed per-user, rather than system-wide.
+* `rcm_user`: The user that the RCM repos will be installed for.
+* `rcm_repos` The list of Git repositories whose dotfiles will be installed.
+    * `repo`: The Git repo URL.
+    * `refspec`: The specific Git revision to clone, defaults to `master`.
+    * `dest`: The directory to clone the repo to.
+* `rcm_install_mode`: If set to `no_internet`, the role will perform all downloads on the Ansible management system, rather than assuming that the system being managed has an internet connection. In this mode, RCM will be installed per-user, rather than system-wide.
+* `rcm_replace_existing_files`: If set to `true`, the `-f` flag will be passed to `rcup`, allowing it to override existing files. This can be used, for example, to replace the user's default `bashrc` file with one from your dotfiles repo.
 
 See [defaults/main.yml](./defaults/main.yml) for the list of defaulted variables and their default values.
 

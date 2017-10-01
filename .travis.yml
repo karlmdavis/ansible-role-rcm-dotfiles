@@ -1,57 +1,52 @@
 ---
+##
+# The Travis CI build for this project.
+##
+
 language: python
 python: "2.7"
 
-# The tests will be run in Docker containers, to verify compatibility with 
+# The tests will be run in Docker containers, to verify compatibility with
 # various OSes.
 sudo: required
 services:
   - docker
-env:
-  # CentOS is mostly used as a standin for RHEL 7.
-  - PLATFORM=centos_7 TEST_CASE=no_internet
-  - PLATFORM=ubuntu_16_04 TEST_CASE=default
 
-addons:
-  apt:
-    packages:
-      - sshpass
+env:
+  global:
+    - ROLE=karlmdavis.rcm
+    - CONTAINER_PREFIX=ansible_test_rcm
+
+# Each list item here will be run as a separate test by Travis CI.
+matrix:
+  include:
+    - env: TEST_PLAY=test_basic.yml TEST_VARS=default     PLATFORM=ubuntu_16_04 ANSIBLE_SPEC="ansible"
+    - env: TEST_PLAY=test_basic.yml TEST_VARS=default     PLATFORM=ubuntu_16_04 ANSIBLE_SPEC="ansible==2.4.0.0"
+    - env: TEST_PLAY=test_basic.yml TEST_VARS=no_internet PLATFORM=centos_7     ANSIBLE_SPEC="ansible"
 
 install:
-  # Ensure that the Travis test user has an SSH key.
-  - if [[ ! -f ~/.ssh/id_rsa.pub ]]; then ssh-keygen -t rsa -N '' -f /home/travis/.ssh/id_rsa; fi
+  # Generate an SSH key for use when connecting to Docker containers.
+  - ssh-keygen -t rsa -N '' -f /home/travis/.ssh/id_rsa
 
-  # Prep the Docker container that will be used.
-  - ./.travis/docker_launch.sh
-
-  # Install ansible.
-  - pip install -r requirements.frozen.txt
-  - ansible --version
-  - mkdir .travis/roles && ln -s `pwd` .travis/roles/karlmdavis.rcm
+  # Prepare to run the tests.
+  - ./test/pre-test.sh /home/travis/.ssh/id_rsa
 
 script:
-  # Ensure that Ansible runs from this directory.
-  - cd .travis/
-
-  # Basic role syntax check
-  - ansible-playbook test_base.yml --inventory-file=inventory --syntax-check
-
-  # Run the Ansible test case.
-  - ansible-playbook test_base.yml --inventory-file=inventory
+  # Run the tests.
+  - test/test.sh
 
 after_script:
-  # For debugging: inspect the management environment.
+  # Inspect the management host environment a bit post-test. Just to aid in debugging.
   - pwd
   - ls -la ../
   - ls -la ./
   - ls -la ./roles/
 
-  # For debugging: inspect the Docker container.
-  - docker exec ansible_test_rcm.${PLATFORM} ls -la /home/ansible_test/
+  # Inspect the Docker container a bit post-test. Just to aid in debugging.
+  - docker exec ${CONTAINER_PREFIX}.${PLATFORM} ls -la /home/ansible_test/
 
-  # Stop all Docker containers.
-  - docker stop $(docker ps -a -q)
+  # Clean up after the test.
+  - test/post-test.sh
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
-

@@ -1,6 +1,4 @@
-# Ignore the Python virtual environment.
-venv/
-
-# Ignore Ansible's `.retry` files.
-*.retry
-
+# Ignore test junk.
+test/venv/
+test/roles/
+test/*.retry

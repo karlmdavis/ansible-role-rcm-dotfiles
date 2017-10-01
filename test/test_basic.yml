@@ -1,4 +1,7 @@
 ---
+##
+# Installs and verifies RCM on the container being used for the test case. 
+##
 
 - hosts: docker_container
   tasks:
@@ -10,12 +13,14 @@
 
     # The only differences between our test cases here are the variables, so we pull them from a separate include.
     - name: Set Ansible Variables for Test Case
-      include_vars: "{{ lookup('env', 'TEST_CASE') }}.yml"
+      include_vars: "{{ lookup('env', 'TEST_VARS') }}.yml"
     
     - name: Apply Ansible Role
-      include_role:
+      import_role:
         name: karlmdavis.rcm
 
+- hosts: docker_container
+  tasks:
     - name: Check for Files Created by Role
       stat:
         path: "{{ item }}"
@@ -26,4 +31,3 @@
       fail: msg='Missing file.'
       with_items: "{{ stat_rcm_files.results }}"
       when: item.stat.exists == false
-

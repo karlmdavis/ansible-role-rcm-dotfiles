@@ -31,10 +31,9 @@ RUN /usr/bin/systemctl enable sshd
 RUN /usr/bin/systemctl enable systemd-user-sessions.service
 
 # Create the SSH user.
-RUN useradd ansible_test -G wheel
+RUN useradd ansible_test
 RUN echo 'ansible_test:secret' | chpasswd
-RUN echo '%wheel ALL=(ALL) ALL' >> /etc/sudoers
-RUN echo 'ansible_test ALL=NOPASSWD:ALL' >> /etc/sudoers
+RUN echo 'ansible_test ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 VOLUME [ "/sys/fs/cgroup" ]
 EXPOSE 22

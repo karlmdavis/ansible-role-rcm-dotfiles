@@ -35,3 +35,6 @@ fi
 # Run the equivalent of Travis' `after_script` phase (cleans up after the
 # tests).
 "${SCRIPT_DIR}/post-test.sh"
+
+echo ""
+echo "Tests completed successfully."

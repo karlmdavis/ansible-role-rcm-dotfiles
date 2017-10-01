@@ -22,7 +22,7 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # The SSH public key to use when connecting to Docker containers.
 sshPublicKey="$(eval echo ~)/.ssh/id_rsa.pub"
 if [[ ! -f "${sshPublicKey}" ]]; then
-  echo "No SSH public key available." &>2
+  echo "No SSH public key available." 1>&2
   exit 1
 fi
 

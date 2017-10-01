@@ -11,6 +11,10 @@ cd "${SCRIPT_DIR}"
 
 # Get the SSH public key to use from the args passed in.
 sshPublicKey="$1"
+if [[ ! -f "${sshPublicKey}" ]]; then
+  echo "SSH key not found: '${sshPublicKey}'." 1>&2
+  exit 1
+fi
 
 # Create and activate the Python virtualenv needed by Ansible.
 if [[ ! -d venv/ ]]; then

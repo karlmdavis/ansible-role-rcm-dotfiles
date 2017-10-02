@@ -69,47 +69,13 @@ If it isn't already installed, install the `virtualenv` package. On Ubuntu, this
 
     $ sudo apt-get install python-virtualenv
 
-Next, create a virtual environment for this project and install the project's dependencies into it:
-
-    $ cd rcm-ansible-role.git
-    $ virtualenv -p /usr/bin/python2.7 venv
-    $ source venv/bin/activate
-    $ pip install -r requirements.txt
-
-The `source` command above will need to be run every time you open a new terminal to work on this project.
-
-Be sure to update the `requirements.frozen.txt` file after `pip install`ing a new dependency for this project:
-
-    $ pip freeze > requirements.frozen.txt
-
 ### Docker
 
-It can often be useful to launch the test Docker containers locally. To do so, one must have Docker installed. The following commands can then be used:
+It can often be useful to launch the test Docker containers locally. To do so, one must have Docker installed. Installing that is outside the scope of this guide, but a quick web search should get you started with this.
 
-```
-# Launch the Docker container for a particular test case (as used in `.travis.yml`).
-$ PLATFORM=ubuntu_16_04 sudo -E .travis/docker_launch.sh
+### Running the Tests
 
-# List all of the running containers.
-$ sudo docker ps -a
-
-# Given a container ID, e.g. `abc123`, run Bash in that container.
-$ PLATFORM=ubuntu_16_04 sudo docker exec ansible_test_rcm.${PLATFORM} /bin/bash
-
-# Alternatively, connect to SSH in that container. The password for these containers is "secret".
-$ ssh-keygen -f ~/.ssh/known_hosts -R [localhost]:13022
-$ ssh ansible_test@localhost -p 13022
-
-# The Ansible test scripts used by Travis can be run manually:
-$ source venv/bin/activate
-$ mkdir .travis/roles && ln -s `pwd` .travis/roles/karlmdavis.rcm
-$ cd .travis/
-$ TEST_CASE=default ansible-playbook test_base.yml --inventory-file=inventory
-$ rm roles/karlmdavis.rcm && rmdir roles/
-
-# Stop all running containers. See <https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes> for instructions on how to remove their images, etc. to reclaim disk space.
-$ sudo docker stop $(sudo docker ps -a -q)
-```
+Once those tools are installed, the [`test/run-tests.sh`](./test/run-tests.sh) script can be used to run the tests locally. Alternatively, changes can be pushed to a GitHub branch or pull request, and Travis CI will run the tests for you: [Travis CI: karlmdavis/ansible-role-rcm-dotfiles](https://travis-ci.org/karlmdavis/ansible-role-rcm-dotfiles).
 
 ## License
 

@@ -9,6 +9,7 @@ This Ansible role can be used to install and configure [RCM](https://github.com/
 
 This role requires the following on the Ansible management system:
 
+* Ansible>=2.4.0.0
 * git>=1.7.1 (the command line tool)
 
 The system(s) being managed require the following:

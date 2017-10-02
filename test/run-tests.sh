@@ -9,8 +9,8 @@ set -e
 
 # These same variables are defined in `.travis.yml`. They can be adjusted to
 # change which test is run.
-export ROLE=karlmdavis.rcm
-export CONTAINER_PREFIX=ansible_test_rcm
+export ROLE=karlmdavis.rcm-dotfiles
+export CONTAINER_PREFIX=ansible_test_rcm_dotfiles
 export TEST_PLAY=test_basic.yml
 export TEST_VARS=default
 export PLATFORM=ubuntu_16_04

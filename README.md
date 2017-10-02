@@ -40,7 +40,7 @@ Here's an example of how to apply this role to the `box` host in an Ansible play
   tasks:
     - name: Install and Configure RCM
       include_role:
-        name: karlmdavis.rcm
+        name: karlmdavis.rcm-dotfiles
       vars:
         rcm_user: ansible_test
         rcm_install_mode: no_internet

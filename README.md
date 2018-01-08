@@ -5,6 +5,10 @@ Ansible Role for RCM
 
 This Ansible role can be used to install and configure [RCM](https://github.com/thoughtbot/rcm), a management suite for dotfiles.
 
+Once this role has been applied, the repos defined for it can be modified locally. Any new dotfiles created in those repos can be deployed by simply running:
+
+    $ rcup -f
+
 ## Requirements
 
 This role requires the following on the Ansible management system:

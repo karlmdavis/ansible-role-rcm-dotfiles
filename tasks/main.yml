@@ -9,10 +9,29 @@
   loop_control:
     loop_var: rcm_repo
 
+- name: Check the .rcrc File
+  stat:
+    path: "{{ '/home/{0}/.rcrc'.format(rcm_user) }}"
+  register: stat_rcrc
+  become: true
+  become_user: "{{ rcm_user }}"
+  changed: false
+
+- name: Write Default .rcrc File
+  template:
+    src: 'templates/rcrc.j2'
+    dest: "{{ '/home/{0}/.rcrc'.format(rcm_user) }}"
+    owner: "{{ rcm_user }}"
+    group: "{{ rcm_user }}"
+    mode: u=rx,g=rw,o=r
+  become: true
+  become_user: "{{ rcm_user }}"
+  # Don't overwrite a `.rcrc` from one of the dotfiles repos.
+  when: "stat_rcrc.stat.exists == false or stat_rcrc.stat.islnk == false"
+
 - set_fact: rcup_bin="{{ '/home/{0}/bin/rcup'.format(rcm_user) if rcm_install_mode == 'no_internet' else '/usr/bin/rcup' }}"
-- set_fact: rcup_args="-x README.md -x LICENSE {{ '-f' if rcm_replace_existing_files == true else '' }}{{ rcm_repos | map(attribute='dest') | map('regex_replace', '(.*)', ' -d \\1') | join('') }}"
+- set_fact: rcup_args="{{ '-f' if rcm_replace_existing_files == true else '' }}"
 - name: Run rcup to Deploy Dotfiles
   command: "{{ rcup_bin }} {{ rcup_args }}"
   become: true
   become_user: "{{ rcm_user }}"
-

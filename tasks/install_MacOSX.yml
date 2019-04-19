@@ -1,0 +1,11 @@
+---
+
+- name: Tap Homebrew Repository for Thoughtbot
+  homebrew_tap:
+    # Per <https://github.com/thoughtbot/rcm>, this is required for RCM on MacOS.
+    name: thoughtbot/formulae
+
+- name: Install RCM
+  homebrew:
+    name: rcm
+    state: present

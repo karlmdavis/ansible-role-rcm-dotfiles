@@ -20,9 +20,14 @@ env:
 # Each list item here will be run as a separate test by Travis CI.
 matrix:
   include:
-    - env: TEST_PLAY=test_basic.yml TEST_VARS=default     PLATFORM=ubuntu_16_04 ANSIBLE_SPEC="ansible"
-    - env: TEST_PLAY=test_basic.yml TEST_VARS=default     PLATFORM=ubuntu_16_04 ANSIBLE_SPEC="ansible==2.4.0.0"
-    - env: TEST_PLAY=test_basic.yml TEST_VARS=no_internet PLATFORM=centos_7     ANSIBLE_SPEC="ansible"
+    - os: osx
+      env: TEST_PLAY=test_basic.yml TEST_VARS=default     TARGET=localhost PLATFORM=ubuntu_16_04 ANSIBLE_SPEC="ansible"
+    - os: linux
+      env: TEST_PLAY=test_basic.yml TEST_VARS=default     TARGET=docker    PLATFORM=ubuntu_16_04 ANSIBLE_SPEC="ansible"
+    - os: linux
+      env: TEST_PLAY=test_basic.yml TEST_VARS=default     TARGET=docker    PLATFORM=ubuntu_16_04 ANSIBLE_SPEC="ansible==2.4.0.0"
+    - os: linux
+      env: TEST_PLAY=test_basic.yml TEST_VARS=no_internet TARGET=docker    PLATFORM=centos_7     ANSIBLE_SPEC="ansible"
 
 install:
   # Generate an SSH key for use when connecting to Docker containers.

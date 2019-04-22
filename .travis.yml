@@ -30,6 +30,7 @@ matrix:
 
 install:
   # Generate an SSH key for use when connecting to Docker containers.
+  - mkdir /home/travis/.ssh
   - ssh-keygen -t rsa -N '' -f /home/travis/.ssh/id_rsa
 
   # Prepare to run the tests.

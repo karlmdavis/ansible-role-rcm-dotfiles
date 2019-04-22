@@ -3,8 +3,7 @@
 # The Travis CI build for this project.
 ##
 
-language: python
-python: "2.7"
+language: minimal
 
 # The tests will be run in Docker containers, to verify compatibility with
 # various OSes.
@@ -21,7 +20,7 @@ env:
 matrix:
   include:
     - os: osx
-      env: TEST_PLAY=test_basic.yml TEST_VARS=default     TARGET=localhost PLATFORM=ubuntu_16_04 ANSIBLE_SPEC="ansible"
+      env: TEST_PLAY=test_basic.yml TEST_VARS=default     TARGET=localhost PLATFORM=             ANSIBLE_SPEC="ansible"
     - os: linux
       env: TEST_PLAY=test_basic.yml TEST_VARS=default     TARGET=docker    PLATFORM=ubuntu_16_04 ANSIBLE_SPEC="ansible"
     - os: linux

@@ -16,6 +16,20 @@ if [[ ! -f "${sshPublicKey}" ]]; then
   exit 1
 fi
 
+# Bootstrap the required dependencies (e.g. Python).
+#
+# Notes:
+#
+# * We can't use Travis CI's automation for this, as it doesn't support Mac OS.
+#   Reference: <https://github.com/travis-ci/travis-ci/issues/2312>.
+# * Leveraging the `bootstrap.sh` script from `karlmdavis/workstation-base-ansible-role`.
+#     * Supports both Linux and Mac OS X.
+#     * Basically just installs Python 3 and the tooling required for a `pipenv`.
+curl -s 'https://raw.githubusercontent.com/karlmdavis/workstation-base-ansible-role/master/bluebutton-server-app/bootstrap.sh' | bash -s
+
+# Create a pipenv with the requested version of Ansible.
+pipenv install --three "${ANSIBLE_SPEC}"
+
 # Create and activate the Python virtualenv needed by Ansible.
 if [[ ! -d venv/ ]]; then
   virtualenv -p /usr/bin/python2.7 venv

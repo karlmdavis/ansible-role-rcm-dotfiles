@@ -7,7 +7,7 @@
   tasks:
     - name: Authorize Test SSH Key
       authorized_key:
-        user: ansible_test
+        user: "{{ remote_user }}"
         state: present
         key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
 
@@ -25,7 +25,7 @@
       stat:
         path: "{{ item }}"
       with_items:
-        - /home/ansible_test/.dotfiles-karlmdavis.git
+        - "/home/{{ remote_user }}/.dotfiles-karlmdavis.git"
       register: stat_rcm_files
     - name: Fail for Missing Files
       fail: msg='Missing file.'

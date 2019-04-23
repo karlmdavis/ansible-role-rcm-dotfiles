@@ -10,9 +10,9 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "${SCRIPT_DIR}"
 
 # Determine which inventory to use, based on TARGET.
-if [[ "${TARGET}" -eq "localhost" ]]; then
+if [[ "${TARGET}" == "localhost" ]]; then
   INVENTORY='inventory_localhost'
-elif [[ "${TARGET}" -eq "docker" ]]; then
+elif [[ "${TARGET}" == "docker" ]]; then
   INVENTORY='inventory_docker'
 else
   >&2 echo "Unsupported TARGET of '${TARGET}'."; exit 1

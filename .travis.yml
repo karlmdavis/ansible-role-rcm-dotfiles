@@ -61,7 +61,7 @@ after_script:
 
   # Inspect the Docker container a bit post-test. Just to aid in debugging.
   - |
-    if [ $PLATFORM -eq "docker" ]; then
+    if [[ "${PLATFORM}" == "docker" ]]; then
       docker exec ${CONTAINER_PREFIX}.${PLATFORM} ls -la /home/ansible_test/
     fi
 

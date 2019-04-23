@@ -31,7 +31,7 @@ if [[ -f ../install_roles.yml ]]; then ansible-galaxy --role-file=../install_rol
 if [[ -f install_roles.yml ]]; then ansible-galaxy --role-file=install_roles.yml --roles-path=./roles; fi
 
 # If the target is Docker and the container isn't already running, prep the Docker container that will be used.
-if [[ "${TARGET}" -eq "docker" ]] && [[ $(sudo docker ps -f "name=${CONTAINER_PREFIX}.${PLATFORM}" --format '{{.Names}}') -eq "${CONTAINER_PREFIX}.${PLATFORM}" ]]; then
+if [[ "${TARGET}" == "docker" ]] && [[ $(sudo docker ps -f "name=${CONTAINER_PREFIX}.${PLATFORM}" --format '{{.Names}}') == "${CONTAINER_PREFIX}.${PLATFORM}" ]]; then
   sudo docker build \
     --tag ${CONTAINER_PREFIX}/${PLATFORM} \
     docker_platforms/${PLATFORM}
@@ -50,6 +50,6 @@ if [[ "${TARGET}" -eq "docker" ]] && [[ $(sudo docker ps -f "name=${CONTAINER_PR
 fi
 
 # If the target is the local host, authorize the SSH keys locally.
-if [[ "${TARGET}" -eq "localhost" ]]; then
+if [[ "${TARGET}" == "localhost" ]]; then
   cat "${sshPublicKey}" >> ~/.ssh/authorized_keys
 fi

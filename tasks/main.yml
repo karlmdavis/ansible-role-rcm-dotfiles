@@ -11,11 +11,11 @@
 
 - set_fact: rcup_bin="{{ '/home/{0}/bin/rcup'.format(rcm_user) if rcm_install_mode == 'no_internet' else '/usr/bin/rcup' }}"
 - set_fact: rcup_repos="{{ rcm_repos | map(attribute='dest') }}"
-- debug: var=rcup_repos
+- debug: msg="rcup_repos: {{ rcup_repos | to_json }}"
 - set_fact: rcup_repos_args_list="{{ rcup_repos | map('regex_replace', '(.*)', ' -d \\1') }}"
-- debug: var=rcup_repos_args_list
+- debug: msg="rcup_repos_args_list: {{ rcup_repos_args_list | to_json }}"
 - set_fact: rcup_repos_args="{{ rcup_repos_args_list | join('') }}"
-- debug: var=rcup_repos_args
+- debug: msg="rcup_repos_args: {{ rcup_repos_args | to_json }}"
 - set_fact: rcup_args="-x README.md -x LICENSE {{ '-f' if rcm_replace_existing_files == true else '' }}{{ rcm_repos | map(attribute='dest') | map('regex_replace', '(.*)', ' -d \\1') | join('') }}"
 - debug:
     var: rcm_repos

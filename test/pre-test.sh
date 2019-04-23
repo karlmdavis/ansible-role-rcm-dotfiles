@@ -18,7 +18,7 @@ fi
 
 # Create a pipenv with the requested version of Ansible.
 # Note: On Linux, Travis CI will already have setup an active Python virtual environment. This will just install things into it.
-pipenv install --three "${ANSIBLE_SPEC}"
+PIPENV_IGNORE_VIRTUALENVS=1 pipenv install --three "${ANSIBLE_SPEC}"
 
 # Install any requirements needed by the role or its tests.
 if [[ -f ../requirements.txt ]]; then pip install --requirement ../requirements.txt; fi

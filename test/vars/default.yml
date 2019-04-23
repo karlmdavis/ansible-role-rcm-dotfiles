@@ -1,7 +1,7 @@
 ---
 
-rcm_user: "{{ remote_user }}"
+rcm_user: "{{ ansible_user }}"
 rcm_repos:
   - repo: 'https://github.com/karlmdavis/dotfiles.git'
-    dest: "/home/{{ remote_user }}/.dotfiles-karlmdavis.git"
+    dest: "/home/{{ ansible_user }}/.dotfiles-karlmdavis.git"
 rcm_replace_existing_files: true

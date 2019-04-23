@@ -28,16 +28,8 @@ fi
 curl -s 'https://raw.githubusercontent.com/karlmdavis/workstation-base-ansible-role/master/bootstrap.sh' | bash -s
 
 # Create a pipenv with the requested version of Ansible.
+# Note: On Linux, Travis CI will already have setup an active Python virtual environment. This will just install things into it.
 pipenv install --three "${ANSIBLE_SPEC}"
-
-# Create and activate the Python virtualenv needed by Ansible.
-if [[ ! -d venv/ ]]; then
-  virtualenv -p /usr/bin/python2.7 venv
-fi
-source venv/bin/activate
-
-# Install Ansible into the venv.
-pip install "${ANSIBLE_SPEC}"
 
 # Install any requirements needed by the role or its tests.
 if [[ -f ../requirements.txt ]]; then pip install --requirement ../requirements.txt; fi

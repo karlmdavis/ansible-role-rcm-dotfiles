@@ -3,13 +3,24 @@
 # The Travis CI build for this project.
 ##
 
-language: minimal
+# These defaults are used for all tetsts runu on Linux, and are overridden
+# for Mac OS X.
+os: linux
+dist: xenial
+language: python
+python: 3.7
 
-# The tests will be run in Docker containers, to verify compatibility with
-# various OSes.
-sudo: required
+# Some tests will be run in Docker containers spun up by and hosted on the
+# Travis CI test host, to verify compatibility with various Linux distros.
 services:
   - docker
+
+# Install Python 3 and pipenv for Mac OS X.
+addons:
+  homebrew:
+    packages:
+      - python@3
+      - pipenv
 
 env:
   global:
@@ -20,15 +31,16 @@ env:
 matrix:
   include:
     - os: osx
+      language: minimal
       env: TEST_PLAY=test_basic.yml TEST_VARS=default     TARGET=localhost PLATFORM=             ANSIBLE_SPEC="ansible"
-    - os: linux
-      env: TEST_PLAY=test_basic.yml TEST_VARS=default     TARGET=docker    PLATFORM=ubuntu_16_04 ANSIBLE_SPEC="ansible"
-    - os: linux
-      env: TEST_PLAY=test_basic.yml TEST_VARS=default     TARGET=docker    PLATFORM=ubuntu_16_04 ANSIBLE_SPEC="ansible==2.4.0.0"
-    - os: linux
-      env: TEST_PLAY=test_basic.yml TEST_VARS=no_internet TARGET=docker    PLATFORM=centos_7     ANSIBLE_SPEC="ansible"
+    - env: TEST_PLAY=test_basic.yml TEST_VARS=default     TARGET=docker    PLATFORM=ubuntu_16_04 ANSIBLE_SPEC="ansible"
+    - env: TEST_PLAY=test_basic.yml TEST_VARS=default     TARGET=docker    PLATFORM=ubuntu_16_04 ANSIBLE_SPEC="ansible==2.4.0.0"
+    - env: TEST_PLAY=test_basic.yml TEST_VARS=no_internet TARGET=docker    PLATFORM=centos_7     ANSIBLE_SPEC="ansible"
 
 install:
+  # On Linux, install pipenv (already installed, up above, on Mac OS X).
+  - if [[ "${TRAVIS_OS_NAME}" -eq "linux" ]]; then pip3 install pipenv; fi
+
   # Generate an SSH key for use when connecting to Docker containers.
   - ssh-keygen -t rsa -N '' -f ${HOME}/.ssh/id_rsa
 

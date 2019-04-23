@@ -33,19 +33,19 @@ if [[ -f install_roles.yml ]]; then ansible-galaxy --role-file=install_roles.yml
 # If the target is Docker and the container isn't already running, prep the Docker container that will be used.
 if [[ "${TARGET}" == "docker" ]] && [[ $(sudo docker ps -f "name=${CONTAINER_PREFIX}.${PLATFORM}" --format '{{.Names}}') == "${CONTAINER_PREFIX}.${PLATFORM}" ]]; then
   sudo docker build \
-    --tag ${CONTAINER_PREFIX}/${PLATFORM} \
-    docker_platforms/${PLATFORM}
+    --tag "${CONTAINER_PREFIX}/${PLATFORM}" \
+    "docker_platforms/${PLATFORM}"
   sudo docker run \
     --cap-add=SYS_ADMIN \
     --detach \
-    --publish 127.0.0.1:13022:22 \
-    --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro \
+    --publish '127.0.0.1:13022:22' \
+    '--volume=/sys/fs/cgroup:/sys/fs/cgroup:ro' \
     --tmpfs /run \
     --tmpfs /run/lock \
-    --name ${CONTAINER_PREFIX}.${PLATFORM} \
-    ${CONTAINER_PREFIX}/${PLATFORM}
+    --name "${CONTAINER_PREFIX}.${PLATFORM}" \
+    "${CONTAINER_PREFIX}/${PLATFORM}"
   cat "${sshPublicKey}" | sudo docker exec \
-    --interactive ${CONTAINER_PREFIX}.${PLATFORM} \
+    --interactive "${CONTAINER_PREFIX}.${PLATFORM}" \
     /bin/bash -c "mkdir /home/ansible_test/.ssh && cat >> /home/ansible_test/.ssh/authorized_keys"
 fi
 

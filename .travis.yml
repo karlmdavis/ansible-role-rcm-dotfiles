@@ -39,7 +39,7 @@ matrix:
 
 install:
   # On Linux, install pipenv (already installed, up above, on Mac OS X).
-  - if [[ "${TRAVIS_OS_NAME}" -eq "linux" ]]; then pip3 install pipenv; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip3 install pipenv; fi
 
   # Generate an SSH key for use when connecting to Docker containers.
   - ssh-keygen -t rsa -N '' -f ${HOME}/.ssh/id_rsa

@@ -18,11 +18,15 @@ else
   >&2 echo "Unsupported TARGET of '${TARGET}'."; exit 1
 fi
 
+set -x
+
 # Basic role syntax check
 pipenv run ansible-playbook test_basic.yml "--inventory=${INVENTORY}" --syntax-check
 
 # Run the Ansible test case.
 pipenv run ansible-playbook test_basic.yml "--inventory=${INVENTORY}"
+
+set +x
 
 # Run the role/playbook again, checking to make sure it's idempotent.
 # FIXME: This role isn't idempotent, due to always running `rcup`.

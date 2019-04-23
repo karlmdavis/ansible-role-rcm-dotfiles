@@ -3,7 +3,7 @@
 # Installs and verifies RCM on the container being used for the test case. 
 ##
 
-- hosts: docker_container
+- hosts: all
   tasks:
     - name: Authorize Test SSH Key
       authorized_key:
@@ -19,7 +19,7 @@
       import_role:
         name: karlmdavis.rcm-dotfiles
 
-- hosts: docker_container
+- hosts: all
   tasks:
     - name: Check for Files Created by Role
       stat:

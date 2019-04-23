@@ -34,7 +34,7 @@ matrix:
       language: minimal
       env: TEST_PLAY=test_basic.yml TEST_VARS=default     TARGET=localhost PLATFORM=             ANSIBLE_SPEC="ansible"
     - env: TEST_PLAY=test_basic.yml TEST_VARS=default     TARGET=localhost PLATFORM=             ANSIBLE_SPEC="ansible"
-    - env: TEST_PLAY=test_basic.yml TEST_VARS=default     TARGET=localhost PLATFORM=             ANSIBLE_SPEC="2.7.8"
+    - env: TEST_PLAY=test_basic.yml TEST_VARS=default     TARGET=localhost PLATFORM=             ANSIBLE_SPEC="ansible==2.7.10"
     - env: TEST_PLAY=test_basic.yml TEST_VARS=default     TARGET=docker    PLATFORM=ubuntu_16_04 ANSIBLE_SPEC="ansible"
     - env: TEST_PLAY=test_basic.yml TEST_VARS=no_internet TARGET=docker    PLATFORM=centos_7     ANSIBLE_SPEC="ansible"
 

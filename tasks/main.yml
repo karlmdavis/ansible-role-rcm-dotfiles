@@ -16,7 +16,7 @@
 - debug:
     msg: "rcup_repos: {{ rcup_repos }}"
 - set_fact:
-    rcup_repos_args_list: "{{ rcup_repos | map('regex_replace', '(.*)', ' -d \\1') | list }}"
+    rcup_repos_args_list: "{{ rcup_repos | map('regex_replace', '^(.*)$', ' -d \\1') | list }}"
 - debug:
     msg: "rcup_repos_args_list: {{ rcup_repos_args_list }}"
 - set_fact:
@@ -24,7 +24,7 @@
 - debug:
     msg: "rcup_repos_args: {{ rcup_repos_args }}"
 - set_fact:
-    rcup_args: "-x README.md -x LICENSE {{ '-f' if rcm_replace_existing_files == true else '' }}{{ rcm_repos | map(attribute='dest') | map('regex_replace', '(.*)', ' -d \\1') | join('') }}"
+    rcup_args: "-x README.md -x LICENSE {{ '-f' if rcm_replace_existing_files == true else '' }}{{ rcm_repos | map(attribute='dest') | map('regex_replace', '^(.*)$', ' -d \\1') | join('') }}"
 - debug:
     var: rcm_repos
 - debug:

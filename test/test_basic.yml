@@ -25,7 +25,7 @@
       stat:
         path: "{{ item }}"
       with_items:
-        - "/home/{{ ansible_user }}/.dotfiles-karlmdavis.git"
+        - "{{ lookup('env','HOME') }}/.dotfiles-karlmdavis.git"
       register: stat_rcm_files
     - name: Fail for Missing Files
       fail: msg='Missing file.'

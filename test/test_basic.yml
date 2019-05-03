@@ -5,11 +5,19 @@
 
 - hosts: all
   tasks:
+    # Get rcm_user's home directory (portably!)
+    - name: Get Home Directory for RCM User
+      shell: echo ~{{ rcm_user }}
+      register: rcm_user_home_shell
+    - name: Calculate Home Directory for RCM User
+      set_fact:
+        rcm_user_home: "{{ rcm_user_home_shell.stdout | trim }}"
+
     - name: Authorize Test SSH Key
       authorized_key:
         user: "{{ ansible_user }}"
         state: present
-        key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
+        key: "{{ lookup('file', rcm_user_home + '/.ssh/id_rsa.pub') }}"
 
     # The only differences between our test cases here are the variables, so we pull them from a separate include.
     - name: Set Ansible Variables for Test Case
@@ -25,7 +33,7 @@
       stat:
         path: "{{ item }}"
       with_items:
-        - "{{ lookup('env','HOME') }}/.dotfiles-karlmdavis.git"
+        - "{{ rcm_user_home }}/.dotfiles-karlmdavis.git"
       register: stat_rcm_files
     - name: Fail for Missing Files
       fail: msg='Missing file.'

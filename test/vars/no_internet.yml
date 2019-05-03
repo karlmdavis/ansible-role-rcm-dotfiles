@@ -4,4 +4,4 @@ rcm_user: "{{ ansible_user }}"
 rcm_install_mode: no_internet
 rcm_repos:
   - repo: 'https://github.com/karlmdavis/dotfiles.git'
-    dest: "{{ lookup('env','HOME') }}/.dotfiles-karlmdavis.git"
+    dest: "/home/{{ rcm_user }}/.dotfiles-karlmdavis.git"

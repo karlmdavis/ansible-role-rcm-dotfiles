@@ -5,6 +5,10 @@
 
 - hosts: all
   tasks:
+    # The only differences between our test cases here are the variables, so we pull them from a separate include.
+    - name: Set Ansible Variables for Test Case
+      include_vars: "{{ lookup('env', 'TEST_VARS') }}.yml"
+
     # Get rcm_user's home directory (portably!)
     - name: Get Home Directory for RCM User
       shell: echo ~{{ rcm_user }}
@@ -18,10 +22,6 @@
         user: "{{ ansible_user }}"
         state: present
         key: "{{ lookup('file', rcm_user_home + '/.ssh/id_rsa.pub') }}"
-
-    # The only differences between our test cases here are the variables, so we pull them from a separate include.
-    - name: Set Ansible Variables for Test Case
-      include_vars: "{{ lookup('env', 'TEST_VARS') }}.yml"
     
     - name: Apply Ansible Role
       import_role:

@@ -43,7 +43,7 @@
         state: directory
         path: "{{ rcm_repo.dest }}"
         owner: "{{ rcm_user }}"
-        group: "{{ rcm_user_group_id | trim }}"
+        group: "{{ rcm_user_group_id.stdout | trim }}"
       become: true
 
     - name: Remove Local Temp Directory for Repo

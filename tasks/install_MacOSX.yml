@@ -9,3 +9,6 @@
   homebrew:
     name: rcm
     state: present
+
+- set_fact:
+    rcup_bin: /usr/local/bin/rcup

@@ -12,9 +12,11 @@
     update_cache: true
   become: true
 
+- set_fact:
+    rcup_bin: /usr/bin/rcup
+
 - name: Install rsync
   apt:
     name: rsync
     update_cache: true
   become: true
-

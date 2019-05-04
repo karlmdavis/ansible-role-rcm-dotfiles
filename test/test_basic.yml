@@ -3,29 +3,31 @@
 # Installs and verifies RCM on the container being used for the test case. 
 ##
 
-- hosts: docker_container
+- hosts: all
   tasks:
-    - name: Authorize Test SSH Key
-      authorized_key:
-        user: ansible_test
-        state: present
-        key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
-
     # The only differences between our test cases here are the variables, so we pull them from a separate include.
     - name: Set Ansible Variables for Test Case
       include_vars: "{{ lookup('env', 'TEST_VARS') }}.yml"
+
+    # Get rcm_user's home directory (portably!)
+    - name: Get Home Directory for RCM User
+      shell: echo ~{{ rcm_user }}
+      register: rcm_user_home_shell
+    - name: Calculate Home Directory for RCM User
+      set_fact:
+        rcm_user_home: "{{ rcm_user_home_shell.stdout | trim }}"
     
     - name: Apply Ansible Role
       import_role:
         name: karlmdavis.rcm-dotfiles
 
-- hosts: docker_container
+- hosts: all
   tasks:
     - name: Check for Files Created by Role
       stat:
         path: "{{ item }}"
       with_items:
-        - /home/ansible_test/.dotfiles-karlmdavis.git
+        - "{{ rcm_user_home }}/.dotfiles-karlmdavis.git"
       register: stat_rcm_files
     - name: Fail for Missing Files
       fail: msg='Missing file.'

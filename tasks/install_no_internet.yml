@@ -8,13 +8,8 @@
     - rsync
   become: true
 
-- name: Lookup User Home Directory
-  shell: "/usr/bin/getent passwd {{ rcm_user }} | /usr/bin/cut -d: -f6"
-  register: shell_user_home
-  changed_when: false
-
 - name: Check Existing RCM Install
-  command: "{{ shell_user_home.stdout }}/bin/mkrc -V"
+  command: "{{ rcm_user_home }}/bin/mkrc -V"
   register: command_mkrc_version
   become: true
   become_user: "{{ rcm_user }}"
@@ -58,11 +53,14 @@
       become_user: "{{ rcm_user }}"
     
     - name: Install RCM for User
-      shell: "./configure --prefix={{ shell_user_home.stdout }} && make && make install"
+      shell: "./configure --prefix={{ rcm_user_home }} && make && make install"
       args:
         chdir: "{{ tempfile_rcm_archive_remote.path }}/rcm-1.3.1/"
       become: true
       become_user: "{{ rcm_user }}"
+
+    - set_fact:
+        rcup_bin: "{{ rcm_user_home }}/bin/rcup"
 
     - name: Remove Local Temporary File for RCM Archive
       file:

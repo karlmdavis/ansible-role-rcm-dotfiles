@@ -3,14 +3,24 @@
 # The Travis CI build for this project.
 ##
 
+# These defaults are used for all tetsts runu on Linux, and are overridden
+# for Mac OS X.
+os: linux
+dist: xenial
 language: python
-python: "2.7"
+python: 3.7
 
-# The tests will be run in Docker containers, to verify compatibility with
-# various OSes.
-sudo: required
+# Some tests will be run in Docker containers spun up by and hosted on the
+# Travis CI test host, to verify compatibility with various Linux distros.
 services:
   - docker
+
+# Install Python 3 and pipenv for Mac OS X.
+addons:
+  homebrew:
+    packages:
+      - python@3
+      - pipenv
 
 env:
   global:
@@ -20,16 +30,23 @@ env:
 # Each list item here will be run as a separate test by Travis CI.
 matrix:
   include:
-    - env: TEST_PLAY=test_basic.yml TEST_VARS=default     PLATFORM=ubuntu_16_04 ANSIBLE_SPEC="ansible"
-    - env: TEST_PLAY=test_basic.yml TEST_VARS=default     PLATFORM=ubuntu_16_04 ANSIBLE_SPEC="ansible==2.4.0.0"
-    - env: TEST_PLAY=test_basic.yml TEST_VARS=no_internet PLATFORM=centos_7     ANSIBLE_SPEC="ansible"
+    - os: osx
+      language: minimal
+      env: TEST_PLAY=test_basic.yml TEST_VARS=default_MacOSX TARGET=localhost PLATFORM=             ANSIBLE_SPEC="ansible"
+    - env: TEST_PLAY=test_basic.yml TEST_VARS=default        TARGET=localhost PLATFORM=             ANSIBLE_SPEC="ansible"
+    - env: TEST_PLAY=test_basic.yml TEST_VARS=default        TARGET=localhost PLATFORM=             ANSIBLE_SPEC="ansible==2.7.10"
+    - env: TEST_PLAY=test_basic.yml TEST_VARS=default        TARGET=docker    PLATFORM=ubuntu_16_04 ANSIBLE_SPEC="ansible"
+    - env: TEST_PLAY=test_basic.yml TEST_VARS=no_internet    TARGET=docker    PLATFORM=centos_7     ANSIBLE_SPEC="ansible"
 
 install:
+  # On Linux, install pipenv (already installed, up above, on Mac OS X).
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip3 install pipenv; fi
+
   # Generate an SSH key for use when connecting to Docker containers.
-  - ssh-keygen -t rsa -N '' -f /home/travis/.ssh/id_rsa
+  - ssh-keygen -t rsa -N '' -f ${HOME}/.ssh/id_rsa
 
   # Prepare to run the tests.
-  - ./test/pre-test.sh /home/travis/.ssh/id_rsa.pub
+  - ./test/pre-test.sh ${HOME}/.ssh/id_rsa.pub
 
 script:
   # Run the tests.
@@ -43,7 +60,10 @@ after_script:
   - ls -la ./roles/
 
   # Inspect the Docker container a bit post-test. Just to aid in debugging.
-  - docker exec ${CONTAINER_PREFIX}.${PLATFORM} ls -la /home/ansible_test/
+  - |
+    if [[ "${TARGET}" == "docker" ]]; then
+      docker exec ${CONTAINER_PREFIX}.${PLATFORM} ls -la /home/ansible_test/
+    fi
 
   # Clean up after the test.
   - test/post-test.sh

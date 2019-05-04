@@ -32,12 +32,18 @@
         dest: "{{ rcm_repo.dest }}"
       become: true
 
+    - name: Get User Group ID
+      command: id -g
+      become: true
+      become_user: "{{ rcm_user }}"
+      register: rcm_user_group_id
+
     - name: Set Repo Ownership
       file:
         state: directory
         path: "{{ rcm_repo.dest }}"
         owner: "{{ rcm_user }}"
-        group: "{{ rcm_user }}"
+        group: "{{ rcm_user_group_id.stdout | trim }}"
       become: true
 
     - name: Remove Local Temp Directory for Repo

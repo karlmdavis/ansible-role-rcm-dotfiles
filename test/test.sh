@@ -27,8 +27,8 @@ pipenv run ansible-playbook test_basic.yml "--inventory=${INVENTORY}"
 
 # Run the role/playbook again, checking to make sure it's idempotent.
 # FIXME: This role isn't idempotent, due to always running `rcup`.
-#pipenv run ansible-playbook $TEST_PLAY "--inventory=${INVENTORY}" \
-#  | tee /dev/tty \
-#  | grep -q 'changed=0.*failed=0' \
-#  && (echo 'Idempotence test: pass' && exit 0) \
-#  || (echo 'Idempotence test: fail' && exit 1)
+pipenv run ansible-playbook $TEST_PLAY "--inventory=${INVENTORY}" \
+  | tee /dev/tty \
+  | grep -q 'changed=0.*failed=0' \
+  && (echo 'Idempotence test: pass' && exit 0) \
+  || (echo 'Idempotence test: fail' && exit 1)

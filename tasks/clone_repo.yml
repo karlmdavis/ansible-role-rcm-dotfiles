@@ -37,6 +37,7 @@
       become: true
       become_user: "{{ rcm_user }}"
       register: rcm_user_group_id
+      changed_when: false
 
     - name: Set Repo Ownership
       file:

@@ -4,6 +4,7 @@
 - name: Get Home Directory for RCM User
   shell: echo ~{{ rcm_user }}
   register: rcm_user_home_shell
+  changed_when: false
 - name: Calculate Home Directory for RCM User
   set_fact:
     rcm_user_home: "{{ rcm_user_home_shell.stdout | trim }}"

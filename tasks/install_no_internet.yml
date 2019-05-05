@@ -2,10 +2,9 @@
 
 - name: Install Prerequisites
   yum:
-    name: "{{ item }}"
-  with_items:
-    - make
-    - rsync
+    name:
+      - make
+      - rsync
   become: true
 
 - name: Check Existing RCM Install

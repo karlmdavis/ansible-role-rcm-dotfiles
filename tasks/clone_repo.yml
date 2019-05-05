@@ -52,5 +52,9 @@
         state: absent
         path: "{{ tempfile_repo.path }}"
       delegate_to: localhost
+
+    - name: Mark Repo as Cloned
+      set_fact:
+        repo_was_cloned: true
   when: stat_repo.stat.exists is not defined or stat_repo.stat.exists == false
 

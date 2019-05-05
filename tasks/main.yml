@@ -13,6 +13,10 @@
 - set_fact: rcm_install_tasks="{{ 'install_no_internet.yml' if rcm_install_mode == 'no_internet' else 'install_{0}.yml'.format(ansible_distribution) }}"
 - include_tasks: "{{ rcm_install_tasks }}"
 
+- name: Initialize Variable for Repo Cloning
+  set_fact:
+    repo_was_cloned: false
+
 - include_tasks: clone_repo.yml
   with_items: "{{ rcm_repos }}"
   loop_control:
@@ -22,5 +26,6 @@
     rcup_args: "-x README.md -x LICENSE{{ ' -f' if rcm_replace_existing_files == true else '' }}{{ rcm_repos | map(attribute='dest') | map('regex_replace', '^(.*)$', ' -d \\1') | join('') }}"
 - name: Run rcup to Deploy Dotfiles
   command: "{{ rcup_bin }} {{ rcup_args }}"
+  when: repo_was_cloned == true
   become: true
   become_user: "{{ rcm_user }}"

@@ -16,14 +16,9 @@ if [[ ! -f "${sshPublicKey}" ]]; then
   exit 1
 fi
 
-# Create and activate the Python virtualenv needed by Ansible.
-if [[ ! -d venv/ ]]; then
-  virtualenv -p /usr/bin/python2.7 venv
-fi
-source venv/bin/activate
-
-# Install Ansible into the venv.
-pip install "${ANSIBLE_SPEC}"
+# Create a pipenv with the requested version of Ansible.
+# Note: On Linux, Travis CI will already have setup an active Python virtual environment. This will just install things into it.
+pipenv install --three "${ANSIBLE_SPEC}"
 
 # Install any requirements needed by the role or its tests.
 if [[ -f ../requirements.txt ]]; then pip install --requirement ../requirements.txt; fi
@@ -35,21 +30,26 @@ if [[ ! -x "roles/${ROLE}" ]]; then ln -s "$(cd .. && pwd)" "roles/${ROLE}"; fi
 if [[ -f ../install_roles.yml ]]; then ansible-galaxy --role-file=../install_roles.yml --roles-path=./roles; fi
 if [[ -f install_roles.yml ]]; then ansible-galaxy --role-file=install_roles.yml --roles-path=./roles; fi
 
-# Prep the Docker container that will be used (if it's not already running).
-if [[ $(sudo docker ps -f "name=${CONTAINER_PREFIX}.${PLATFORM}" --format '{{.Names}}') != "${CONTAINER_PREFIX}.${PLATFORM}" ]]; then
+# If the target is Docker and the container isn't already running, prep the Docker container that will be used.
+if [[ "${TARGET}" == 'docker' && $(sudo docker ps -f "name=${CONTAINER_PREFIX}.${PLATFORM}" --format '{{.Names}}') != "${CONTAINER_PREFIX}.${PLATFORM}" ]]; then
   sudo docker build \
-    --tag ${CONTAINER_PREFIX}/${PLATFORM} \
-    docker_platforms/${PLATFORM}
+    --tag "${CONTAINER_PREFIX}/${PLATFORM}" \
+    "docker_platforms/${PLATFORM}"
   sudo docker run \
     --cap-add=SYS_ADMIN \
     --detach \
-    --publish 127.0.0.1:13022:22 \
-    --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro \
+    --publish '127.0.0.1:13022:22' \
+    '--volume=/sys/fs/cgroup:/sys/fs/cgroup:ro' \
     --tmpfs /run \
     --tmpfs /run/lock \
-    --name ${CONTAINER_PREFIX}.${PLATFORM} \
-    ${CONTAINER_PREFIX}/${PLATFORM}
+    --name "${CONTAINER_PREFIX}.${PLATFORM}" \
+    "${CONTAINER_PREFIX}/${PLATFORM}"
   cat "${sshPublicKey}" | sudo docker exec \
-    --interactive ${CONTAINER_PREFIX}.${PLATFORM} \
+    --interactive "${CONTAINER_PREFIX}.${PLATFORM}" \
     /bin/bash -c "mkdir /home/ansible_test/.ssh && cat >> /home/ansible_test/.ssh/authorized_keys"
+fi
+
+# If the target is the local host, authorize the SSH keys locally.
+if [[ "${TARGET}" == "localhost" ]]; then
+  cat "${sshPublicKey}" >> ~/.ssh/authorized_keys
 fi

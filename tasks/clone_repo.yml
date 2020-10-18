@@ -32,12 +32,19 @@
         dest: "{{ rcm_repo.dest }}"
       become: true
 
+    - name: Get User Group ID
+      command: id -g
+      become: true
+      become_user: "{{ rcm_user }}"
+      register: rcm_user_group_id
+      changed_when: false
+
     - name: Set Repo Ownership
       file:
         state: directory
         path: "{{ rcm_repo.dest }}"
         owner: "{{ rcm_user }}"
-        group: "{{ rcm_user }}"
+        group: "{{ rcm_user_group_id.stdout | trim }}"
       become: true
 
     - name: Remove Local Temp Directory for Repo
@@ -45,5 +52,9 @@
         state: absent
         path: "{{ tempfile_repo.path }}"
       delegate_to: localhost
+
+    - name: Mark Repo as Cloned
+      set_fact:
+        repo_was_cloned: true
   when: stat_repo.stat.exists is not defined or stat_repo.stat.exists == false
 

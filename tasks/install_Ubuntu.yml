@@ -11,6 +11,7 @@
     name: rcm
     update_cache: true
   become: true
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_version in ['16.04', '18.04']
 
 - set_fact:
     rcup_bin: /usr/bin/rcup

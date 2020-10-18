@@ -21,6 +21,7 @@ addons:
     packages:
       - python@3
       - pipenv
+    update: true
 
 env:
   global:

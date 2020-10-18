@@ -28,7 +28,7 @@
   register: stat_rcrc
   become: true
   become_user: "{{ rcm_user }}"
-  changed: false
+  changed_when: false
 
 - name: Write Default .rcrc File
   template:

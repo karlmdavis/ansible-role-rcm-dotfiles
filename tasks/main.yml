@@ -24,7 +24,7 @@
 
 - name: Check the .rcrc File
   stat:
-    path: "{{ '/home/{0}/.rcrc'.format(rcm_user) }}"
+    path: "{{ '{0}/.rcrc'.format(rcm_user_home) }}"
   register: stat_rcrc
   become: true
   become_user: "{{ rcm_user }}"
@@ -33,7 +33,7 @@
 - name: Write Default .rcrc File
   template:
     src: 'templates/rcrc.j2'
-    dest: "{{ '/home/{0}/.rcrc'.format(rcm_user) }}"
+    dest: "{{ '{0}/.rcrc'.format(rcm_user_home) }}"
     owner: "{{ rcm_user }}"
     group: "{{ rcm_user }}"
     mode: u=rx,g=rw,o=r

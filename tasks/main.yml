@@ -49,7 +49,7 @@
   # Don't overwrite a `.rcrc` from one of the dotfiles repos.
   when: "stat_rcrc.stat.exists == false or stat_rcrc.stat.islnk == false"
 
-- set_fact: rcup_bin="{{ '/home/{0}/bin/rcup'.format(rcm_user) if rcm_install_mode == 'no_internet' else '/usr/bin/rcup' }}"
+- set_fact: rcup_bin="{{ '{0}/bin/rcup'.format(rcm_user_home) if rcm_install_mode == 'no_internet' else '/usr/bin/rcup' }}"
 - set_fact: rcup_args="{{ '-f' if rcm_replace_existing_files == true else '' }}"
 - name: Run rcup to Deploy Dotfiles
   command: "{{ rcup_bin }} {{ rcup_args }}"

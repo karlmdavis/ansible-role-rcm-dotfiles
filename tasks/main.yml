@@ -8,6 +8,13 @@
 - name: Calculate Home Directory for RCM User
   set_fact:
     rcm_user_home: "{{ rcm_user_home_shell.stdout | trim }}"
+- name: Get Group for RCM User
+  command: id -gn
+  register: rcm_user_group_command
+  changed_when: false
+- name: Calculate Group for RCM User
+  set_fact:
+    rcm_user_group: "{{ rcm_user_group_command.stdout | trim }}"
 
 # Determine which installation and configuration mechanism to use.
 - set_fact: rcm_install_tasks="{{ 'install_no_internet.yml' if rcm_install_mode == 'no_internet' else 'install_{0}.yml'.format(ansible_distribution) }}"
@@ -35,7 +42,7 @@
     src: 'templates/rcrc.j2'
     dest: "{{ '{0}/.rcrc'.format(rcm_user_home) }}"
     owner: "{{ rcm_user }}"
-    group: "{{ rcm_user }}"
+    group: "{{ rcm_user_group }}"
     mode: u=rx,g=rw,o=r
   become: true
   become_user: "{{ rcm_user }}"

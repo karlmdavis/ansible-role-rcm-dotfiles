@@ -34,7 +34,6 @@
     path: "{{ '{0}/.rcrc'.format(rcm_user_home) }}"
   register: stat_rcrc
   become: true
-  become_user: "{{ rcm_user }}"
   changed_when: false
 
 - name: Write Default .rcrc File
@@ -45,7 +44,6 @@
     group: "{{ rcm_user_group }}"
     mode: u=rx,g=rw,o=r
   become: true
-  become_user: "{{ rcm_user }}"
   # Don't overwrite a `.rcrc` from one of the dotfiles repos.
   when: "stat_rcrc.stat.exists == false or stat_rcrc.stat.islnk == false"
 
